@@ -147,6 +147,7 @@ def add_weights_as_attribute(
 
     return log
 
+
 def full_experiment(optimizer_seed: int):
 
     main_output_dir = f"./full_experiment_output_{optimizer_seed}"
@@ -162,7 +163,10 @@ def full_experiment(optimizer_seed: int):
                 if os.path.exists(config_path):
                     with open(config_path, "r") as f:
                         existing_config = json.load(f)
-                        if existing_config["run_experiment_id"] == config["run_experiment_id"]:
+                        if (
+                            existing_config["run_experiment_id"]
+                            == config["run_experiment_id"]
+                        ):
                             return True
         return False
 
@@ -198,7 +202,7 @@ def full_experiment(optimizer_seed: int):
 
     NUM_TRIALS = [10, 50, 100, 250]
     OPTMIZER_TARGET_DECISIONS = ["all", "user-defined"]
-    N_REPETITIONS = 3
+    N_REPETITIONS = 1
 
     all_possible_configs = []
 
@@ -226,9 +230,7 @@ def full_experiment(optimizer_seed: int):
             print(f"Experiment with config {config} already exists. Skipping...")
             continue
 
-        output_dir = (
-            f"{main_output_dir}/run_experiment_{config['run_experiment_id']}"
-        )
+        output_dir = f"{main_output_dir}/run_experiment_{config['run_experiment_id']}"
         os.makedirs(output_dir, exist_ok=True)
 
         log = xes_importer(config["eventlog_path"])
@@ -300,4 +302,5 @@ def full_experiment(optimizer_seed: int):
 
 
 if __name__ == "__main__":
-    full_experiment(optimizer_seed=1)
+    for optimizer_seed in [1, 2, 3]:
+        full_experiment(optimizer_seed=optimizer_seed)
